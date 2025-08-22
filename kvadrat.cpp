@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <math.h>
 
+#define infinityOfSolutions -1;
+#define noSolutions -2;
+
+
 //TODO: linear
 //TODO: codestyle
 void linear(double b , double c);
@@ -11,7 +15,8 @@ void square(double a, double b , double c);
 void enteringOdds(double *a, double *b, double *c);
 
 int main() {
-    double a = ..., b, c;
+    double a = 0, b = 0, c = 0;
+    double x1 = 0, x2 = 0;
 
     enteringOdds(&a , &b , &c);
 
@@ -54,7 +59,7 @@ void linear(double b , double c) {
     } else {
 
         x = -b / c;
-        printf("Решением является: %lf", x);
+        printf("Решением является : %lf", x);
     }
 
 }
@@ -71,11 +76,12 @@ void square(double a, double b, double c) {
         x1 = (-b + sqrt(discriminant)) / (2*a);
         x2 = (-b - sqrt(discriminant)) / (2*a);
 
-        printf("Первый корень: x1 = %lf\n" , x1);
-        printf("Второй корень: x2 = %lf\n" , x2);
+        printf("Первый корень : x1 = %lf\n" , x1);
+        printf("Второй корень : x2 = %lf\n" , x2);
+
     } else if (discriminant == 0) {
         x1 = -b / (2*a);
-        printf("Решение: x = %lf\n" , x1);
+        printf("Решение : x = %lf\n" , x1);
     } else {
         printf("Решений нет");
     }
@@ -85,12 +91,16 @@ void square(double a, double b, double c) {
 void enteringOdds(double *a, double *b, double *c){
     printf("Уравнения вида ax^2 + bx + c = 0\n");
 
-    printf("Введите коэффициент а:");
+    printf("Введите коэффициент а (действительное число) : ");
     scanf("%lf" , a);
 
-    printf("Введите коэффициент b:");
+    printf("Введите коэффициент b (действительное число) : ");
     scanf("%lf" , b);
     //TODO: int success_elements = ...
-    printf("Введите коэффициент c:");
+    printf("Введите коэффициент c (действительное число) : ");
     scanf("%lf" , c);
 }
+
+
+
+
