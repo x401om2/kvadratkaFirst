@@ -1,7 +1,17 @@
-
 #include <stdio.h>
 #include <math.h>
+#include <float.h>
 
+const double EPSILON = 0.000001;
+
+const int TWO_ROOTS = 2;
+const int ONE_ROOT = 1;
+const int ZERO_ROOTS = 0;
+const int INF_OF_ROOTS = -1;
+
+// NAN
+
+// -0.000
 
 void conclusion(double *x1, double *x2 , int *nRoots);
 void solveSquare(double a, double b, double c , double *x1, double *x2 , int *nRoots);
@@ -10,17 +20,21 @@ void linear(double b, double c, double *x1, int *nRoots);
 void enteringOdds(double *a, double *b, double *c);
 void cleanBuffer();
 void inputDouble(double *value, const char *name);
+int doubleCompare(double a, double b, double value);
+void testSolveSquare();
 
 
 int main() {
-
-    double a = 0, b = 0, c = 0;
-    double x1 = 0, x2 = 0;
-    int nRoots = 0;
+    // Struct for coeffs
+    double a = NAN, b = NAN, c = NAN;
+    // Struct for roots
+    double x1 = NAN, x2 = NAN;
+    int nRoots = NAN;
 
     enteringOdds(&a , &b , &c);
     solveSquare(a, b, c, &x1, &x2, &nRoots);
     conclusion(&x1, &x2, &nRoots);
+    testSolveSquare();
 
     return 0;
 }
@@ -33,11 +47,9 @@ void enteringOdds(double *a, double *b, double *c){
     inputDouble(b , "b");
     inputDouble(c , "c");
 }
-// 0.1 + 0.2 != 0.3
-//
-// 0.30000000000000000004
+
 void solveSquare(double a, double b, double c , double *x1, double *x2 , int *nRoots) {
-    if (a == 0) {
+    if (doubleCompare(a, 0, EPSILON)) {
         linear(b, c, x1 , nRoots);
     } else {
         square(a, b, c, x1, x2, nRoots);
@@ -46,16 +58,16 @@ void solveSquare(double a, double b, double c , double *x1, double *x2 , int *nR
 
 void conclusion(double *x1, double *x2 , int *nRoots) {
 
-    if (*nRoots == 0) {
-        printf("Решений нет");
-    }else if (*nRoots == -1) {
-        printf("Решений бесконечное количество");
-    } else if (*nRoots == 1) {
-        printf("Решение есть. Корень : %lf" , *x1);
+    if (*nRoots == ZERO_ROOTS) {
+        printf("Решений нет\n");
+    }else if (*nRoots == INF_OF_ROOTS) {
+        printf("Решений бесконечное количество\n");
+    } else if (*nRoots == ONE_ROOT) {
+        printf("Решение есть. Корень : %lf\n" , *x1);
     } else {
         printf("Решения есть\n");
         printf("Корень1 : %lf\n" , *x1);
-        printf("Корень2 : %lf" , *x2);
+        printf("Корень2 : %lf\n" , *x2);
     }
 }
 
@@ -64,39 +76,58 @@ void cleanBuffer() {
 }
 
 void linear(double b,double c, double *x1, int *nRoots) {
-    if (b == 0) {
-        if (c == 0) {
-            *nRoots = -1;
+    if (doubleCompare(b, 0, EPSILON)) {
+        if (doubleCompare(c, 0, EPSILON)) {
+            *nRoots = INF_OF_ROOTS;
         } else {
-            *nRoots = 0;
+            *nRoots = ZERO_ROOTS;
         }
     } else {
         *x1 = -c / b;
-        *nRoots = 1;
+        *nRoots = ONE_ROOT;
     }
 }
 
 void square(double a, double b, double c, double *x1, double *x2, int *nRoots) {
 
     double discriminant = b*b - (4*a*c);
+
     if (discriminant > 0) {
         *x1 = (-b + sqrt(discriminant)) / (2*a);
         *x2 = (-b - sqrt(discriminant)) / (2*a);
-        *nRoots = 2;
+        *nRoots = TWO_ROOTS;
 
-    } else if (discriminant == 0) {
+    } else if (doubleCompare(discriminant, 0, EPSILON)) {
         *x1 = -b / (2*a);
-        *nRoots = 1;
+        *nRoots = ONE_ROOT;
     } else {
-        *nRoots = 0;
+        *nRoots = ZERO_ROOTS;
     }
 
 }
 
-void inputDouble(double *value, const char *name) { //
+void inputDouble(double *value, const char *name) {
     printf("Введите коэффициент %s (действительное число) : ", name);
     while (scanf("%lf", value) != 1) {
         printf("Ошибка! Введите число: ");
         cleanBuffer();
     }
+}
+
+int doubleCompare(double a, double b, double value) {
+    return fabs(a - b) < value; //value - маленькое значение (погрешность) на эпсилон поменять
+}
+
+void testSolveSquare() {
+    double x1 = 0 , x2 = 0;
+    int nRoots = 0;
+
+    solveSquare(1, -5, 6, &x1, &x2, &nRoots);
+
+    if (!(nRoots == TWO_ROOTS && (doubleCompare(x1, 3, EPSILON)) && (doubleCompare(x2, 2, EPSILON)))) {
+        printf("Failed: solveSquare(1, -5, 6) -> 2, x1 = %lf, x2 = %lf (should be x1 = 2, x2 = 3\n)" , x1, x2);
+    }else {
+        printf("good");
+    }
+
 }
