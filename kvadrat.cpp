@@ -1,17 +1,30 @@
+//константы сделал и NAN сделал
+
 #include <stdio.h>
 #include <math.h>
 #include <float.h>
 
-const double EPSILON = 0.000001;
+const double EPSILON = 0.00001;
 
 const int TWO_ROOTS = 2;
 const int ONE_ROOT = 1;
 const int ZERO_ROOTS = 0;
 const int INF_OF_ROOTS = -1;
 
-// NAN
+// -0.000 сделал
 
-// -0.000
+struct coefficients {
+    double a;
+    double b;
+    double c;
+};
+
+struct results {
+    double x1;
+    double x2;
+
+    int nRoots;
+};
 
 void conclusion(double *x1, double *x2 , int *nRoots);
 void solveSquare(double a, double b, double c , double *x1, double *x2 , int *nRoots);
@@ -20,16 +33,15 @@ void linear(double b, double c, double *x1, int *nRoots);
 void enteringOdds(double *a, double *b, double *c);
 void cleanBuffer();
 void inputDouble(double *value, const char *name);
-int doubleCompare(double a, double b, double value);
+int doubleCompare(double a, double b);
 void testSolveSquare();
-
 
 int main() {
     // Struct for coeffs
     double a = NAN, b = NAN, c = NAN;
     // Struct for roots
     double x1 = NAN, x2 = NAN;
-    int nRoots = NAN;
+    int nRoots = 0;
 
     enteringOdds(&a , &b , &c);
     solveSquare(a, b, c, &x1, &x2, &nRoots);
@@ -49,7 +61,7 @@ void enteringOdds(double *a, double *b, double *c){
 }
 
 void solveSquare(double a, double b, double c , double *x1, double *x2 , int *nRoots) {
-    if (doubleCompare(a, 0, EPSILON)) {
+    if (doubleCompare(a, 0)) {
         linear(b, c, x1 , nRoots);
     } else {
         square(a, b, c, x1, x2, nRoots);
@@ -76,14 +88,17 @@ void cleanBuffer() {
 }
 
 void linear(double b,double c, double *x1, int *nRoots) {
-    if (doubleCompare(b, 0, EPSILON)) {
-        if (doubleCompare(c, 0, EPSILON)) {
+    if (doubleCompare(b, 0)) {
+        if (doubleCompare(c, 0)) {
             *nRoots = INF_OF_ROOTS;
         } else {
             *nRoots = ZERO_ROOTS;
         }
     } else {
         *x1 = -c / b;
+        if (fabs(*x1) < EPSILON) {
+            *x1 = 0.0;
+        }
         *nRoots = ONE_ROOT;
     }
 }
@@ -95,10 +110,19 @@ void square(double a, double b, double c, double *x1, double *x2, int *nRoots) {
     if (discriminant > 0) {
         *x1 = (-b + sqrt(discriminant)) / (2*a);
         *x2 = (-b - sqrt(discriminant)) / (2*a);
+        if (fabs(*x1) < EPSILON) {
+            *x1 = 0.0;
+        }
+        if (fabs(*x2) < EPSILON) {
+            *x2 = 0.0;
+        }
         *nRoots = TWO_ROOTS;
 
-    } else if (doubleCompare(discriminant, 0, EPSILON)) {
+    } else if (doubleCompare(discriminant, 0)) {
         *x1 = -b / (2*a);
+        if (fabs(*x1) < EPSILON) {
+            *x1 = 0.0;
+        }
         *nRoots = ONE_ROOT;
     } else {
         *nRoots = ZERO_ROOTS;
@@ -114,8 +138,11 @@ void inputDouble(double *value, const char *name) {
     }
 }
 
-int doubleCompare(double a, double b, double value) {
-    return fabs(a - b) < value; //value - маленькое значение (погрешность) на эпсилон поменять
+int doubleCompare(double a, double b) {
+    if (fabs(a) < EPSILON && fabs(b) < EPSILON) {//случай для сравнения
+        return 1;
+    }
+    return fabs(a - b) < EPSILON;
 }
 
 void testSolveSquare() {
@@ -124,10 +151,11 @@ void testSolveSquare() {
 
     solveSquare(1, -5, 6, &x1, &x2, &nRoots);
 
-    if (!(nRoots == TWO_ROOTS && (doubleCompare(x1, 3, EPSILON)) && (doubleCompare(x2, 2, EPSILON)))) {
+    if (!(nRoots == TWO_ROOTS && (doubleCompare(x1, 3)) && (doubleCompare(x2, 2)))) {
         printf("Failed: solveSquare(1, -5, 6) -> 2, x1 = %lf, x2 = %lf (should be x1 = 2, x2 = 3\n)" , x1, x2);
     }else {
         printf("good");
     }
 
 }
+
