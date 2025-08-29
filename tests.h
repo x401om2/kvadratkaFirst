@@ -2,6 +2,7 @@
 #define TESTS_H
 
 #include "equation.h"
+#include "colors.h"
 
 int oneTest(equationData test);
 void runTests();

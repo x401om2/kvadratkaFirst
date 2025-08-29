@@ -1,20 +1,20 @@
 #include <stdio.h>
 #include "cat_art.h"
 
-#include <unistd.h>
+
 
 
 void poltoraIIIka(const char *name) {
     printf(" ");
     printf(" \n");
-    printf("       ....／＞　 フ.....\n");
-    printf("　　　　　| 　_　 _|\n");
-    printf("　 　　　／`ミ _* 彡 -- %s!!\n" ,name);
-    printf("　　 　 /　　　 　 |\n");
-    printf("　　　 /　 ヽ　　 ﾉ\n");
-    printf("　／￣|　　 |　|　|\n");
-    printf("　| (￣ヽ＿_ヽ_)_)\n");
-    printf("　＼二つ\n");
+    printf(BLUE "       ....／＞　 フ.....\n" RESET);
+    printf(BLUE "　　　　　| 　_　 _|\n" RESET);
+    printf(BLUE "　 　　　／`ミ _* 彡 -- %s!!\n" RESET ,name);
+    printf(BLUE "　　 　 /　　　 　 |\n" RESET);
+    printf(GREEN "　　　 /　 ヽ　　 ﾉ\n" RESET);
+    printf(GREEN "　／￣|　　 |　|　|\n" RESET);
+    printf(YELLOW "　| (￣ヽ＿_ヽ_)_)\n" RESET);
+    printf(YELLOW "　＼二つ\n" RESET);
     printf(" \n");
     printf(" ");
     sleep(2);

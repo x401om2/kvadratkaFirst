@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
+
+
 int oneTest(equationData test) {
     assert(!isnan(test.a));
     assert(!isnan(test.b));
@@ -13,19 +15,19 @@ int oneTest(equationData test) {
     solveSquare(&ed);
 
     if (ed.nRoots != test.nRoots) {
-        printf("Ошибка: из solveSquare(%lf, %lf, %lf) получилось корней = %d, а в действительности = %d\n",
+        printf(RED "Ошибка: из solveSquare(%lf, %lf, %lf) получилось корней = %d, а в действительности = %d\n" RESET,
                test.a, test.b, test.c,
                ed.nRoots, test.nRoots);
         return 0;
     }
     if (ed.nRoots >= 1 && !doubleCompare(ed.x1, test.x1)) {
-        printf("Ошибка: из solveSquare(%lf, %lf, %lf) получился x1 = %lf, а должен быть = %lf\n",
+        printf(RED "Ошибка: из solveSquare(%lf, %lf, %lf) получился x1 = %lf, а должен быть = %lf\n" RESET,
                test.a, test.b, test.c,
                ed.x1, test.x1);
         return 0;
     }
     if (ed.nRoots == TWO_ROOTS && !doubleCompare(ed.x2, test.x2)) {
-        printf("Ошибка: из solveSquare(%lf, %lf, %lf) получился x2 = %lf, а должен быть = %lf\n",
+        printf(RED "Ошибка: из solveSquare(%lf, %lf, %lf) получился x2 = %lf, а должен быть = %lf\n" RESET,
                test.a, test.b, test.c,
                ed.x2, test.x2);
         return 0;
@@ -59,9 +61,9 @@ void runTests() {
 
     if (passed == countOfTests) {
         printf(" \n");
-        printf("ВCE ТЕСТЫ ВЫПОЛНЕНЫ\n");
+        printf(GREEN "ВCE ТЕСТЫ ВЫПОЛНЕНЫ\n" RESET);
     } else {
-        printf("Есть ошибка\n");
+        printf(RED "Есть ошибка\n" RESET);
         printf("%d\n", passed);
     }
     printf("\n");

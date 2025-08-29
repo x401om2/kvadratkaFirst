@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
-#include <ctype.h>    // для isdigit, isspace
-#include <string.h>   // для strcspn - ищет первое вхождение любого символа из заданного набора в строке
+
+
 
 void conclusion(const equationData *ed) {
     assert(ed != NULL);
@@ -12,24 +12,24 @@ void conclusion(const equationData *ed) {
     switch (ed->nRoots) {
         case ZERO_ROOTS :
             printf(" \n");
-            printf("НЕТ РЕШЕНИЙ\n");
+            printf(GREEN "ОТВЕТ: НЕТ РЕШЕНИЙ\n" RESET);
             break;
         case ONE_ROOT:
             printf(" \n");
-            printf("ОТВЕТ: РЕШЕНИЕ ЕСТЬ. КОРЕНЬ: %lf\n", ed->x1);
+            printf(GREEN "ОТВЕТ: РЕШЕНИЕ ЕСТЬ. КОРЕНЬ: %lf\n" RESET, ed->x1);
             break;
         case TWO_ROOTS:
             printf(" \n");
-            printf("ОТВЕТ: РЕШЕНИЯ ЕСТЬ\n");
-            printf("Корень1: %lf\n", ed->x1);
-            printf("Корень2: %lf\n", ed->x2);
+            printf(GREEN "ОТВЕТ: РЕШЕНИЯ ЕСТЬ\n" RESET);
+            printf(GREEN "Корень1: %lf\n" RESET, ed->x1);
+            printf(GREEN "Корень2: %lf\n" RESET, ed->x2);
             break;
         case INF_OF_ROOTS:
             printf(" \n");
-            printf("ОТВЕТ: РЕШЕНИЙ БЕСКОНЕЧНОЕ КОЛИЧЕСТВО\n");
+            printf(GREEN "ОТВЕТ: РЕШЕНИЙ БЕСКОНЕЧНОЕ КОЛИЧЕСТВО\n" RESET);
             break;
         case ERROR_ROOTS:
-            printf("ОШИБОЧНОЕ КОЛИЧЕСТВО КОРНЕЙ\n");
+            printf(GREEN "ОТВЕТ: ОШИБОЧНОЕ КОЛИЧЕСТВО КОРНЕЙ\n" RESET);
             break;
         default:
             printf("КОЛИЧЕСТВО КОРНЕЙ НЕИЗВЕСТНО\n");
@@ -41,8 +41,8 @@ void enteringOdds(equationData *ed) {
     assert(ed != NULL);
     assert(ed->nRoots == ERROR_ROOTS);
 
-    printf("Вы можете решить уравнение вида ax^2 + bx + c = 0\n");
-    printf("Для этого вам необходимо ввести коэффициенты а b c по очереди\n");
+    printf(BLUE "Вы можете решить уравнение вида ax^2 + bx + c = 0\n" RESET);
+    printf(BLUE "Для этого вам необходимо ввести коэффициенты а b c по очереди\n" RESET);
 
     inputDouble(&ed->a , "a");
     inputDouble(&ed->b , "b");
@@ -64,11 +64,11 @@ void inputDouble(double *value, const char *name) {
 
     while (1) { // цикл пока не получим число для вычисления
         printf(" \n");
-        printf("ВВЕДИТЕ КОЭФФИЦИЕНТ %s: ", name);
-
+        printf(GREEN "ВВЕДИТЕ КОЭФФИЦИЕНТ %s: " RESET, name);
+        //stdin это означ - стандартный поток вывода с клавиатуры
         if (fgets(buffer, sizeof(buffer), stdin) == NULL) { //читаем строку до появления первого симв нов строки
             printf(" \n");
-            printf("ОШИБКА ЧТЕНИЯ. ПОПРОБУЙТЕ СНОВА.\n");
+            printf(RED "ОШИБКА ЧТЕНИЯ. ПОПРОБУЙТЕ СНОВА.\n" RESET);
             cleanBuffer();
             continue; //переход к след итерации
         }
@@ -77,7 +77,7 @@ void inputDouble(double *value, const char *name) {
 
         if (buffer[0] == '\0') { //если остался '\0' после удал "\n" то пустой ввод
             printf(" \n");
-            printf("ВАШ ВВОД НИЧЕГО НЕ СОДЕРЖИТ. ВВЕДИТЕ ЧИСЛО.\n");
+            printf(RED "ВАШ ВВОД НИЧЕГО НЕ СОДЕРЖИТ. ВВЕДИТЕ ЧИСЛО.\n" RESET);
             continue;
         }
 
@@ -106,7 +106,7 @@ void inputDouble(double *value, const char *name) {
         }
         if (!valid || digits == 0) { //если неправ ввод или нет цифр
             printf(" \n");
-            printf("ОШИБКА! ИСПОЛЬЗУЙТЕ ТОЛЬКО: цифры 0-9, знаки + или -, точку - .\n");
+            printf(RED "ОШИБКА! ИСПОЛЬЗУЙТЕ ТОЛЬКО: цифры 0-9, знаки + или -, точку - .\n" RESET);
             continue;
         }
         // Преобразуем в число
@@ -117,13 +117,13 @@ void inputDouble(double *value, const char *name) {
         while (*endptr != '\0') { //пока символ не явл симв оконч строки
             if (!isspace(*endptr)) { //если не пробельный символ, символ для записи числа
                 printf(" \n");
-                printf("ОШИБКА! ЛИШНИЕ СИМВОЛЫ В КОНЦЕ.\n");
+                printf(RED "ОШИБКА! ЛИШНИЕ СИМВОЛЫ В КОНЦЕ.\n" RESET);
                 valid = 0;
                 break;
             }
             endptr++; //переход к след символу
         }
-        if (!valid) continue; //если не число то продолжаем цикл ввода значений(просим ввести заново)
+        if (!valid) continue; //если не валидное значение то продолжаем цикл ввода значений(просим ввести заново)
         *value = result; //записываем результат ввода по указателю
         break; // Успешный ввод
     }
